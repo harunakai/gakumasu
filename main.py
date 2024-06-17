@@ -31,6 +31,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(self.button1_click)
         self.pushButton_2.clicked.connect(self.button2_click)
         self.pushButton_3.clicked.connect(self.button3_click)
+        self.pushButton_4.clicked.connect(self.button4_click)
         self.button3_status = False
         self.cal = None
         self.remain_cal = None
@@ -62,7 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         vo = int(vo)
         da = int(da)
         vi = int(vi)
-        print(target_rank, end_rank, vo, da, vi)
+        #print(target_rank, end_rank, vo, da, vi)
         self.set_data(target_rank, end_rank, None, vo, da, vi)
         bottom = top = 0
         try:
@@ -83,7 +84,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.end_rank = end_rank
         self.wanted_rank = wanted_rank
         self.end_score = end_score
-        self.end_rank = hanzi2str[self.end_rank]
+        if self.end_rank:
+            self.end_rank = hanzi2str[self.end_rank]
         self.vo = vo
         self.da = da
         self.vi = vi
@@ -93,6 +95,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif self.tabWidget.currentIndex() == 0:
             self.cal = get_rank_cal()
             self.cal.set_data(self.end_rank, self.end_score, self.vo, self.da, self.vi)
+        elif self.tabWidget.currentIndex() == 3:
+            self.cal = get_need_score_cal()
+            self.cal.set_data(self.need_score, self.end_rank, self.vo, self.da, self.vi)
 
     def get_data(self):
         return self.wanted_rank, self.end_rank, self.end_score, self.vo, self.da, self.vi
@@ -102,6 +107,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return self.remain_cal.get_required_score()
         elif self.tabWidget.currentIndex() == 0:
             return self.cal.get_rank(), self.cal.get_score()
+        elif self.tabWidget.currentIndex() == 3:
+            return self.cal.get_required_score()
         
     def button3_click(self):
         if not self.button3_status:
@@ -151,6 +158,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def show_image(self, image_path):
         pixmap = QPixmap(image_path)
         self.label_15.setPixmap(pixmap.scaled(self.label_15.size(), Qt.KeepAspectRatio))
+
+    def button4_click(self):
+        end_rank = self.comboBox_4.currentText()
+        self.need_score = self.lineEdit_9.text()
+        vo = self.lineEdit_10.text()
+        da = self.lineEdit_11.text()
+        vi = self.lineEdit_8.text()
+        vo = int(vo)
+        da = int(da)
+        vi = int(vi)
+        self.need_score = int(self.need_score)
+        self.set_data(None, end_rank, None, vo, da, vi)
+        bottom = top = 0
+        try:
+            bottom, top = self.get_result()
+            self.textBrowser_7.setText(str(bottom))
+            self.textBrowser_6.setText(str(top))
+        except ValueError as e:
+            if str(e) == 'bottom too big':
+                bottom = '无法达到'
+                top = '无法达到'
+            elif str(e) == 'top too big':
+                top = '无法达到'
+                bottom = self.remain_cal.get_bottom()
+            self.textBrowser_7.setText(str(bottom))
+            self.textBrowser_6.setText(str(top))
+
         
 
 if __name__ == '__main__':
