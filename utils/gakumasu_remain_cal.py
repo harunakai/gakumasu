@@ -11,16 +11,21 @@ class gakumasu_remain_cal:
     def set_data(self, wanted_rank, end_rank, vo, da, vi):
         self.wanted_rank = wanted_rank
         self.end_rank = end_rank
-        self.vo = vo
-        self.da = da
-        self.vi = vi
+        self.vo = vo + 30
+        self.da = da + 30
+        self.vi = vi + 30
+        if self.vo > 1500:
+            self.vo = 1500
+        if self.da > 1500:
+            self.da = 1500
+        if self.vi > 1500:
+            self.vi = 1500
+            
+        
 
 
     def three_size(self):
-        if self.end_rank == '1':
-            return math.floor((self.vo + self.da + self.vi + 90)*2.3)
-        else:
-            return math.floor((self.vo + self.da + self.vi)*2.3)
+        return math.floor((self.vo + self.da + self.vi)*2.3)
     
 
     def get_end_rank_score(self):
