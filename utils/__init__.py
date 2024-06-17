@@ -1,5 +1,6 @@
 from .gakumasu_calculater import gakumasu_calculater
 from .gakumasu_remain_cal import gakumasu_remain_cal
+from .gakumasu_need_score_cal import gakumasu_need_score_cal
 
 
 rank_dict = {
@@ -56,4 +57,7 @@ def get_rank_cal():
 
 def get_remain_cal():
     return gakumasu_remain_cal(rank_dict, end_rank_dict, required_score)
+
+def get_need_score_cal():
+    return gakumasu_need_score_cal(end_rank_dict, required_score)
 
